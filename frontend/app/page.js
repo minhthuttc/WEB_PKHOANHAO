@@ -10,8 +10,8 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    FullName: '', Email: '', Phone: '', Department: '',
-    Position: '', Salary: '', HireDate: '', Status: 'Active'
+    HoTen: '', Email: '', SoDienThoai: '', PhongBan: '',
+    ChucVu: '', Luong: '', NgayVaoLam: '', TrangThai: 'Đang làm'
   });
 
   useEffect(() => {
@@ -44,12 +44,12 @@ export default function Home() {
 
   const handleEdit = (emp) => {
     setFormData({
-      FullName: emp.FullName, Email: emp.Email, Phone: emp.Phone,
-      Department: emp.Department, Position: emp.Position,
-      Salary: emp.Salary, HireDate: emp.HireDate?.split('T')[0],
-      Status: emp.Status
+      HoTen: emp.HoTen, Email: emp.Email, SoDienThoai: emp.SoDienThoai,
+      PhongBan: emp.PhongBan, ChucVu: emp.ChucVu,
+      Luong: emp.Luong, NgayVaoLam: emp.NgayVaoLam?.split('T')[0],
+      TrangThai: emp.TrangThai
     });
-    setEditingId(emp.EmployeeID);
+    setEditingId(emp.MaNV);
     setShowForm(true);
   };
 
@@ -66,8 +66,8 @@ export default function Home() {
 
   const resetForm = () => {
     setFormData({
-      FullName: '', Email: '', Phone: '', Department: '',
-      Position: '', Salary: '', HireDate: '', Status: 'Active'
+      HoTen: '', Email: '', SoDienThoai: '', PhongBan: '',
+      ChucVu: '', Luong: '', NgayVaoLam: '', TrangThai: 'Đang làm'
     });
     setEditingId(null);
     setShowForm(false);
@@ -140,30 +140,30 @@ export default function Home() {
             </h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
               <input type="text" placeholder="Họ tên" required
-                className="border p-2 rounded" value={formData.FullName}
-                onChange={(e) => setFormData({...formData, FullName: e.target.value})} />
+                className="border p-2 rounded" value={formData.HoTen}
+                onChange={(e) => setFormData({...formData, HoTen: e.target.value})} />
               <input type="email" placeholder="Email" required
                 className="border p-2 rounded" value={formData.Email}
                 onChange={(e) => setFormData({...formData, Email: e.target.value})} />
               <input type="tel" placeholder="Số điện thoại"
-                className="border p-2 rounded" value={formData.Phone}
-                onChange={(e) => setFormData({...formData, Phone: e.target.value})} />
+                className="border p-2 rounded" value={formData.SoDienThoai}
+                onChange={(e) => setFormData({...formData, SoDienThoai: e.target.value})} />
               <input type="text" placeholder="Phòng ban"
-                className="border p-2 rounded" value={formData.Department}
-                onChange={(e) => setFormData({...formData, Department: e.target.value})} />
+                className="border p-2 rounded" value={formData.PhongBan}
+                onChange={(e) => setFormData({...formData, PhongBan: e.target.value})} />
               <input type="text" placeholder="Chức vụ"
-                className="border p-2 rounded" value={formData.Position}
-                onChange={(e) => setFormData({...formData, Position: e.target.value})} />
+                className="border p-2 rounded" value={formData.ChucVu}
+                onChange={(e) => setFormData({...formData, ChucVu: e.target.value})} />
               <input type="number" placeholder="Lương"
-                className="border p-2 rounded" value={formData.Salary}
-                onChange={(e) => setFormData({...formData, Salary: e.target.value})} />
+                className="border p-2 rounded" value={formData.Luong}
+                onChange={(e) => setFormData({...formData, Luong: e.target.value})} />
               <input type="date" placeholder="Ngày vào làm" required
-                className="border p-2 rounded" value={formData.HireDate}
-                onChange={(e) => setFormData({...formData, HireDate: e.target.value})} />
-              <select className="border p-2 rounded" value={formData.Status}
-                onChange={(e) => setFormData({...formData, Status: e.target.value})}>
-                <option value="Active">Đang làm</option>
-                <option value="Inactive">Đã nghỉ</option>
+                className="border p-2 rounded" value={formData.NgayVaoLam}
+                onChange={(e) => setFormData({...formData, NgayVaoLam: e.target.value})} />
+              <select className="border p-2 rounded" value={formData.TrangThai}
+                onChange={(e) => setFormData({...formData, TrangThai: e.target.value})}>
+                <option value="Đang làm">Đang làm</option>
+                <option value="Đã nghỉ">Đã nghỉ</option>
               </select>
               <div className="col-span-2 flex gap-2">
                 <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
@@ -193,17 +193,17 @@ export default function Home() {
             </thead>
             <tbody>
               {employees.map((emp) => (
-                <tr key={emp.EmployeeID} className="border-t hover:bg-gray-50">
-                  <td className="p-3">{emp.FullName}</td>
+                <tr key={emp.MaNV} className="border-t hover:bg-gray-50">
+                  <td className="p-3">{emp.HoTen}</td>
                   <td className="p-3">{emp.Email}</td>
-                  <td className="p-3">{emp.Department}</td>
-                  <td className="p-3">{emp.Position}</td>
-                  <td className="p-3">{emp.Salary?.toLocaleString()} VNĐ</td>
+                  <td className="p-3">{emp.PhongBan}</td>
+                  <td className="p-3">{emp.ChucVu}</td>
+                  <td className="p-3">{emp.Luong?.toLocaleString()} VNĐ</td>
                   <td className="p-3">
                     <span className={`px-2 py-1 rounded text-sm ${
-                      emp.Status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      emp.TrangThai === 'Đang làm' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     }`}>
-                      {emp.Status === 'Active' ? 'Đang làm' : 'Đã nghỉ'}
+                      {emp.TrangThai}
                     </span>
                   </td>
                   <td className="p-3 text-center">
@@ -211,7 +211,7 @@ export default function Home() {
                       <>
                         <button onClick={() => handleEdit(emp)}
                           className="text-blue-600 hover:underline mr-3">Sửa</button>
-                        <button onClick={() => handleDelete(emp.EmployeeID)}
+                        <button onClick={() => handleDelete(emp.MaNV)}
                           className="text-red-600 hover:underline">Xóa</button>
                       </>
                     ) : (

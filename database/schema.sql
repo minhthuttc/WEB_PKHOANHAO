@@ -1,30 +1,30 @@
 -- Tạo database
-CREATE DATABASE EmployeeManagement;
+CREATE DATABASE QuanLyNhanVien;
 GO
 
-USE EmployeeManagement;
+USE QuanLyNhanVien;
 GO
 
 -- Bảng nhân viên
-CREATE TABLE Employees (
-    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
-    FullName NVARCHAR(100) NOT NULL,
+CREATE TABLE NhanVien (
+    MaNV INT PRIMARY KEY IDENTITY(1,1),
+    HoTen NVARCHAR(100) NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
-    Phone NVARCHAR(20),
-    Department NVARCHAR(50),
-    Position NVARCHAR(50),
-    Salary DECIMAL(10, 2),
-    HireDate DATE NOT NULL,
-    Status NVARCHAR(20) DEFAULT 'Active',
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    UpdatedAt DATETIME DEFAULT GETDATE()
+    SoDienThoai NVARCHAR(20),
+    PhongBan NVARCHAR(50),
+    ChucVu NVARCHAR(50),
+    Luong DECIMAL(10, 2),
+    NgayVaoLam DATE NOT NULL,
+    TrangThai NVARCHAR(20) DEFAULT N'Đang làm',
+    NgayTao DATETIME DEFAULT GETDATE(),
+    NgayCapNhat DATETIME DEFAULT GETDATE()
 );
 GO
 
 -- Insert dữ liệu mẫu
-INSERT INTO Employees (FullName, Email, Phone, Department, Position, Salary, HireDate)
+INSERT INTO NhanVien (HoTen, Email, SoDienThoai, PhongBan, ChucVu, Luong, NgayVaoLam)
 VALUES 
-('Nguyễn Văn A', 'nguyenvana@example.com', '0901234567', N'Kỹ thuật', N'Kỹ sư', 15000000, '2023-01-15'),
-('Trần Thị B', 'tranthib@example.com', '0912345678', N'Nhân sự', N'Trưởng phòng', 20000000, '2022-06-20'),
-('Lê Văn C', 'levanc@example.com', '0923456789', N'Kinh doanh', N'Nhân viên', 12000000, '2024-03-10');
+(N'Nguyễn Văn A', 'nguyenvana@example.com', '0901234567', N'Kỹ thuật', N'Kỹ sư', 15000000, '2023-01-15'),
+(N'Trần Thị B', 'tranthib@example.com', '0912345678', N'Nhân sự', N'Trưởng phòng', 20000000, '2022-06-20'),
+(N'Lê Văn C', 'levanc@example.com', '0923456789', N'Kinh doanh', N'Nhân viên', 12000000, '2024-03-10');
 GO
