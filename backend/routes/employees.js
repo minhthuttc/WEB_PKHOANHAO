@@ -7,20 +7,20 @@ router.get('/', async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
-            .query('SELECT * FROM NhanVien ORDER BY NgayTao DESC');
+            .query('SELECT * FROM NhanVien ORDER BY STT ASC');
         res.json(result.recordset);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
-// Lấy 1 nhân viên theo ID
+// Lấy 1 nhân viên theo STT
 router.get('/:id', async (req, res) => {
     try {
         const pool = await poolPromise;
         const result = await pool.request()
             .input('id', sql.Int, req.params.id)
-            .query('SELECT * FROM NhanVien WHERE MaNV = @id');
+            .query('SELECT * FROM NhanVien WHERE STT = @id');
         
         if (result.recordset.length === 0) {
             return res.status(404).json({ error: 'Không tìm thấy nhân viên' });
@@ -34,23 +34,21 @@ router.get('/:id', async (req, res) => {
 // Thêm nhân viên mới
 router.post('/', async (req, res) => {
     try {
-        const { HoTen, Email, SoDienThoai, PhongBan, ChucVu, Luong, NgayVaoLam } = req.body;
+        const { MaNV, HoTen, DiaChi, SDT, PhanLoaiSK } = req.body;
         const pool = await poolPromise;
         const result = await pool.request()
+            .input('MaNV', sql.NVarChar, MaNV)
             .input('HoTen', sql.NVarChar, HoTen)
-            .input('Email', sql.NVarChar, Email)
-            .input('SoDienThoai', sql.NVarChar, SoDienThoai)
-            .input('PhongBan', sql.NVarChar, PhongBan)
-            .input('ChucVu', sql.NVarChar, ChucVu)
-            .input('Luong', sql.Decimal(10, 2), Luong)
-            .input('NgayVaoLam', sql.Date, NgayVaoLam)
-            .query(`INSERT INTO NhanVien (HoTen, Email, SoDienThoai, PhongBan, ChucVu, Luong, NgayVaoLam)
-                    VALUES (@HoTen, @Email, @SoDienThoai, @PhongBan, @ChucVu, @Luong, @NgayVaoLam);
-                    SELECT SCOPE_IDENTITY() AS MaNV;`);
+            .input('DiaChi', sql.NVarChar, DiaChi)
+            .input('SDT', sql.NVarChar, SDT)
+            .input('PhanLoaiSK', sql.NVarChar, PhanLoaiSK)
+            .query(`INSERT INTO NhanVien (MaNV, HoTen, DiaChi, SDT, PhanLoaiSK)
+                    VALUES (@MaNV, @HoTen, @DiaChi, @SDT, @PhanLoaiSK);
+                    SELECT SCOPE_IDENTITY() AS STT;`);
         
         res.status(201).json({ 
             message: 'Thêm nhân viên thành công',
-            MaNV: result.recordset[0].MaNV 
+            STT: result.recordset[0].STT 
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -60,23 +58,19 @@ router.post('/', async (req, res) => {
 // Cập nhật nhân viên
 router.put('/:id', async (req, res) => {
     try {
-        const { HoTen, Email, SoDienThoai, PhongBan, ChucVu, Luong, NgayVaoLam, TrangThai } = req.body;
+        const { MaNV, HoTen, DiaChi, SDT, PhanLoaiSK } = req.body;
         const pool = await poolPromise;
         await pool.request()
             .input('id', sql.Int, req.params.id)
+            .input('MaNV', sql.NVarChar, MaNV)
             .input('HoTen', sql.NVarChar, HoTen)
-            .input('Email', sql.NVarChar, Email)
-            .input('SoDienThoai', sql.NVarChar, SoDienThoai)
-            .input('PhongBan', sql.NVarChar, PhongBan)
-            .input('ChucVu', sql.NVarChar, ChucVu)
-            .input('Luong', sql.Decimal(10, 2), Luong)
-            .input('NgayVaoLam', sql.Date, NgayVaoLam)
-            .input('TrangThai', sql.NVarChar, TrangThai)
+            .input('DiaChi', sql.NVarChar, DiaChi)
+            .input('SDT', sql.NVarChar, SDT)
+            .input('PhanLoaiSK', sql.NVarChar, PhanLoaiSK)
             .query(`UPDATE NhanVien 
-                    SET HoTen = @HoTen, Email = @Email, SoDienThoai = @SoDienThoai,
-                        PhongBan = @PhongBan, ChucVu = @ChucVu, Luong = @Luong,
-                        NgayVaoLam = @NgayVaoLam, TrangThai = @TrangThai, NgayCapNhat = GETDATE()
-                    WHERE MaNV = @id`);
+                    SET MaNV = @MaNV, HoTen = @HoTen, DiaChi = @DiaChi,
+                        SDT = @SDT, PhanLoaiSK = @PhanLoaiSK, NgayCapNhat = GETDATE()
+                    WHERE STT = @id`);
         
         res.json({ message: 'Cập nhật nhân viên thành công' });
     } catch (err) {
@@ -90,7 +84,7 @@ router.delete('/:id', async (req, res) => {
         const pool = await poolPromise;
         await pool.request()
             .input('id', sql.Int, req.params.id)
-            .query('DELETE FROM NhanVien WHERE MaNV = @id');
+            .query('DELETE FROM NhanVien WHERE STT = @id');
         
         res.json({ message: 'Xóa nhân viên thành công' });
     } catch (err) {

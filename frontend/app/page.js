@@ -10,8 +10,7 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    HoTen: '', Email: '', SoDienThoai: '', PhongBan: '',
-    ChucVu: '', Luong: '', NgayVaoLam: '', TrangThai: 'Đang làm'
+    MaNV: '', HoTen: '', DiaChi: '', SDT: '', PhanLoaiSK: 'Loại 1'
   });
 
   useEffect(() => {
@@ -44,12 +43,10 @@ export default function Home() {
 
   const handleEdit = (emp) => {
     setFormData({
-      HoTen: emp.HoTen, Email: emp.Email, SoDienThoai: emp.SoDienThoai,
-      PhongBan: emp.PhongBan, ChucVu: emp.ChucVu,
-      Luong: emp.Luong, NgayVaoLam: emp.NgayVaoLam?.split('T')[0],
-      TrangThai: emp.TrangThai
+      MaNV: emp.MaNV, HoTen: emp.HoTen, DiaChi: emp.DiaChi,
+      SDT: emp.SDT, PhanLoaiSK: emp.PhanLoaiSK
     });
-    setEditingId(emp.MaNV);
+    setEditingId(emp.STT);
     setShowForm(true);
   };
 
@@ -66,8 +63,7 @@ export default function Home() {
 
   const resetForm = () => {
     setFormData({
-      HoTen: '', Email: '', SoDienThoai: '', PhongBan: '',
-      ChucVu: '', Luong: '', NgayVaoLam: '', TrangThai: 'Đang làm'
+      MaNV: '', HoTen: '', DiaChi: '', SDT: '', PhanLoaiSK: 'Loại 1'
     });
     setEditingId(null);
     setShowForm(false);
@@ -139,31 +135,25 @@ export default function Home() {
               {editingId ? 'Sửa nhân viên' : 'Thêm nhân viên mới'}
             </h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+              <input type="text" placeholder="Mã nhân viên (VD: NV001)" required
+                className="border p-2 rounded" value={formData.MaNV}
+                onChange={(e) => setFormData({...formData, MaNV: e.target.value})} />
               <input type="text" placeholder="Họ tên" required
                 className="border p-2 rounded" value={formData.HoTen}
                 onChange={(e) => setFormData({...formData, HoTen: e.target.value})} />
-              <input type="email" placeholder="Email" required
-                className="border p-2 rounded" value={formData.Email}
-                onChange={(e) => setFormData({...formData, Email: e.target.value})} />
+              <input type="text" placeholder="Địa chỉ" className="col-span-2 border p-2 rounded" 
+                value={formData.DiaChi}
+                onChange={(e) => setFormData({...formData, DiaChi: e.target.value})} />
               <input type="tel" placeholder="Số điện thoại"
-                className="border p-2 rounded" value={formData.SoDienThoai}
-                onChange={(e) => setFormData({...formData, SoDienThoai: e.target.value})} />
-              <input type="text" placeholder="Phòng ban"
-                className="border p-2 rounded" value={formData.PhongBan}
-                onChange={(e) => setFormData({...formData, PhongBan: e.target.value})} />
-              <input type="text" placeholder="Chức vụ"
-                className="border p-2 rounded" value={formData.ChucVu}
-                onChange={(e) => setFormData({...formData, ChucVu: e.target.value})} />
-              <input type="number" placeholder="Lương"
-                className="border p-2 rounded" value={formData.Luong}
-                onChange={(e) => setFormData({...formData, Luong: e.target.value})} />
-              <input type="date" placeholder="Ngày vào làm" required
-                className="border p-2 rounded" value={formData.NgayVaoLam}
-                onChange={(e) => setFormData({...formData, NgayVaoLam: e.target.value})} />
-              <select className="border p-2 rounded" value={formData.TrangThai}
-                onChange={(e) => setFormData({...formData, TrangThai: e.target.value})}>
-                <option value="Đang làm">Đang làm</option>
-                <option value="Đã nghỉ">Đã nghỉ</option>
+                className="border p-2 rounded" value={formData.SDT}
+                onChange={(e) => setFormData({...formData, SDT: e.target.value})} />
+              <select className="border p-2 rounded" value={formData.PhanLoaiSK}
+                onChange={(e) => setFormData({...formData, PhanLoaiSK: e.target.value})}>
+                <option value="Loại 1">Loại 1</option>
+                <option value="Loại 2">Loại 2</option>
+                <option value="Loại 3">Loại 3</option>
+                <option value="Loại 4">Loại 4</option>
+                <option value="Loại 5">Loại 5</option>
               </select>
               <div className="col-span-2 flex gap-2">
                 <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
@@ -182,28 +172,26 @@ export default function Home() {
           <table className="w-full">
             <thead className="bg-gray-200">
               <tr>
+                <th className="p-3 text-left">STT</th>
+                <th className="p-3 text-left">Mã NV</th>
                 <th className="p-3 text-left">Họ tên</th>
-                <th className="p-3 text-left">Email</th>
-                <th className="p-3 text-left">Phòng ban</th>
-                <th className="p-3 text-left">Chức vụ</th>
-                <th className="p-3 text-left">Lương</th>
-                <th className="p-3 text-left">Trạng thái</th>
+                <th className="p-3 text-left">Địa chỉ</th>
+                <th className="p-3 text-left">SĐT</th>
+                <th className="p-3 text-left">Phân loại SK</th>
                 <th className="p-3 text-center">Thao tác</th>
               </tr>
             </thead>
             <tbody>
               {employees.map((emp) => (
-                <tr key={emp.MaNV} className="border-t hover:bg-gray-50">
+                <tr key={emp.STT} className="border-t hover:bg-gray-50">
+                  <td className="p-3">{emp.STT}</td>
+                  <td className="p-3 font-semibold text-blue-600">{emp.MaNV}</td>
                   <td className="p-3">{emp.HoTen}</td>
-                  <td className="p-3">{emp.Email}</td>
-                  <td className="p-3">{emp.PhongBan}</td>
-                  <td className="p-3">{emp.ChucVu}</td>
-                  <td className="p-3">{emp.Luong?.toLocaleString()} VNĐ</td>
+                  <td className="p-3">{emp.DiaChi}</td>
+                  <td className="p-3">{emp.SDT}</td>
                   <td className="p-3">
-                    <span className={`px-2 py-1 rounded text-sm ${
-                      emp.TrangThai === 'Đang làm' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {emp.TrangThai}
+                    <span className="px-2 py-1 rounded text-sm bg-green-100 text-green-800">
+                      {emp.PhanLoaiSK}
                     </span>
                   </td>
                   <td className="p-3 text-center">
@@ -211,7 +199,7 @@ export default function Home() {
                       <>
                         <button onClick={() => handleEdit(emp)}
                           className="text-blue-600 hover:underline mr-3">Sửa</button>
-                        <button onClick={() => handleDelete(emp.MaNV)}
+                        <button onClick={() => handleDelete(emp.STT)}
                           className="text-red-600 hover:underline">Xóa</button>
                       </>
                     ) : (
